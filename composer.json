@@ -2,6 +2,7 @@
     "name": "whmyr/yamlenv",
     "description": "Reads `env.yml`. Fork of maatwebsite/yamlenv",
     "keywords": ["env", "yaml", "environment"],
+    "type": "composer-plugin",
     "license" : "LGPL",
     "version": "1.0.2",
     "authors" : [
