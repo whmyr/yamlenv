@@ -54,6 +54,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function onPreAutoloadDump()
     {
+        $this->io->write('<info>Processing yaml configuration to provide env vars!</info>');
+
         if (!class_exists(IncludeFile::class)) {
             // Plugin package was removed
             return;
