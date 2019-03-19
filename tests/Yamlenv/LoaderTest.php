@@ -2,7 +2,7 @@
 
 use Yamlenv\Loader;
 
-class LoaderTest extends PHPUnit_Framework_TestCase
+class LoaderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -24,7 +24,7 @@ class LoaderTest extends PHPUnit_Framework_TestCase
      */
     private $mutableLoader;
 
-    public static function setupBeforeClass()
+    public static function setupBeforeClass() : void
     {
         if (!function_exists('apache_getenv')) {
             /**
@@ -48,7 +48,7 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->folder = dirname(__DIR__) . '/fixtures/valid/env.yml';
 
@@ -87,12 +87,13 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         $this->assertSame(false, isset($_SERVER[$this->key()]));
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ImmutableException
-     * @expectedExceptionMessage Environment variables cannot be overwritten in an immutable environment.
-     */
     public function testMutableLoaderCanBeSetToImmutable()
     {
+        $this->expectException(\Yamlenv\Exception\ImmutableException::class);
+        $this->expectExceptionMessage(
+            'Environment variables cannot be overwritten in an immutable environment.'
+        );
+
         // Set an environment variable.
         $this->mutableLoader->setEnvironmentVariable($this->key(), $this->value());
 
@@ -132,12 +133,13 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         $this->assertSame($this->value(), $this->immutableLoader->getEnvironmentVariable($this->key()));
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ImmutableException
-     * @expectedExceptionMessage Environment variables cannot be overwritten in an immutable environment.
-     */
     public function testFlattenNestedValuesThrowsExceptionWithDuplication()
     {
+        $this->expectException(\Yamlenv\Exception\ImmutableException::class);
+        $this->expectExceptionMessage(
+            'Environment variables cannot be overwritten in an immutable environment.'
+        );
+
         $this->clearEnv();
 
         $immutableLoader = new Loader(dirname(__DIR__) . '/fixtures/valid/duplicates_nested.yml', true);

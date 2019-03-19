@@ -4,24 +4,23 @@ use Yamlenv\Loader;
 use Yamlenv\Validator;
 use Yamlenv\Yamlenv;
 
-class YamlenvTest extends PHPUnit_Framework_TestCase
+class YamlenvTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
      */
     private $fixturesFolder;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->fixturesFolder = dirname(__DIR__) . '/fixtures/valid';
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\InvalidPathException
-     * @expectedExceptionMessage Unable to read the environment file at
-     */
     public function testYamlenvThrowsExceptionIfUnableToLoadFile()
     {
+        $this->expectException(\Yamlenv\Exception\InvalidPathException::class);
+        $this->expectExceptionMessage('Unable to read the environment file at');
+
         $yamlenv = new Yamlenv(__DIR__);
         $yamlenv->load();
     }
@@ -67,12 +66,11 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Input file does not contain valid Yaml
-     */
     public function testSpacedValuesWithoutQuotesThrowsException()
     {
+        $this->expectException(\Yamlenv\Exception\InvalidFileException::class);
+        $this->expectExceptionMessage('Input file does not contain valid Yaml');
+
         $yamlenv = new Yamlenv(dirname(__DIR__) . '/fixtures/invalid', 'invalid.yml');
         $yamlenv->load();
     }
@@ -137,12 +135,14 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
      * @depends testYamlenvLoadsEnvironmentVars
      * @depends testYamlenvLoadsEnvGlobals
      * @depends testYamlenvLoadsServerGlobals
-     *
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an integer.
      */
     public function testYamlenvRequiredIntegerEnvironmentVar()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: FOO is not an integer.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder);
@@ -184,12 +184,14 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
      * @depends testYamlenvLoadsEnvironmentVars
      * @depends testYamlenvLoadsEnvGlobals
      * @depends testYamlenvLoadsServerGlobals
-     *
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value.
      */
     public function testYamlenvProhibitedValues()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: FOO is not an allowed value.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder);
@@ -197,12 +199,13 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $yamlenv->required('FOO')->allowedValues(['buzz']);
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOOX is missing, NOPE is missing.
-     */
     public function testYamlenvRequiredThrowsRuntimeException()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: FOOX is missing, NOPE is missing.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder);
@@ -312,12 +315,14 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Validator::class, $validator);
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: LCVAR1 is missing, LCVAR2 is missing, LCVAR3 is missing.
-     */
     public function testYamlenvFailsIfNotConvertedToUppercase()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: LCVAR1 is missing, '
+            . 'LCVAR2 is missing, LCVAR3 is missing.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder, 'lowercase.yml', false);
@@ -365,12 +370,13 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Validator::class, $validator);
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty.
-     */
     public function testYamlenvEmptyThrowsRuntimeException()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: ASSERTVAR2 is empty.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder, 'assertions.yml');
@@ -380,12 +386,13 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $yamlenv->required('ASSERTVAR2')->notEmpty();
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
-     */
     public function testYamlenvStringOfSpacesConsideredEmpty()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: ASSERTVAR3 is empty.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder, 'assertions.yml');
@@ -395,12 +402,13 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $yamlenv->required('ASSERTVAR3')->notEmpty();
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
-     */
     public function testYamlenvHitsLastChain()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: ASSERTVAR3 is empty.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder, 'assertions.yml');
@@ -408,12 +416,13 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $yamlenv->required('ASSERTVAR3')->notEmpty();
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: foo is missing.
-     */
     public function testYamlenvValidateRequiredWithoutLoading()
     {
+        $this->expectException(\Yamlenv\Exception\ValidationException::class);
+        $this->expectExceptionMessage(
+            'One or more environment variables failed assertions: foo is missing.'
+        );
+
         $this->clearEnv();
 
         $yamlenv = new Yamlenv($this->fixturesFolder, 'assertions.yml');
@@ -441,12 +450,11 @@ class YamlenvTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Loader::class, $loader);
     }
 
-    /**
-     * @expectedException \Yamlenv\Exception\LoaderException
-     * @expectedExceptionMessage Loader has not been initialized yet.
-     */
     public function testGetLoaderGivesNullBeforeLoad()
     {
+        $this->expectException(\Yamlenv\Exception\LoaderException::class);
+        $this->expectExceptionMessage('Loader has not been initialized yet.');
+
         $yamlenv = new Yamlenv($this->fixturesFolder);
         $yamlenv->getLoader();
     }
