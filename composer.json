@@ -1,5 +1,5 @@
 {
-    "name": "whymr/yamlenv",
+    "name": "whmyr/yamlenv",
     "description": "Reads `env.yml`. Fork of maatwebsite/yamlenv",
     "keywords": ["env", "yaml", "environment"],
     "license" : "LGPL",
