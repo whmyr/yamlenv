@@ -30,6 +30,6 @@
         }
     },
     "extra": {
-        "class": "YamlEnv\\Plugin"
+        "class": "Yamlenv\\Plugin"
     }
 }
