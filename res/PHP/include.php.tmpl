@@ -3,6 +3,6 @@ call_user_func(function($yamlFile) {
     if (!getenv('APP_ENV') && file_exists($yamlFile)) {
         $yamlFilePath = explode('/', $yamlFile);
         $fileName = array_pop($yamlFilePath);
-        (new \Yamlenv\Yamlenv(implode('/', $yamlFilePath), $fileName))->load();
+        (new \Yamlenv\Yamlenv(implode('/', $yamlFilePath), $fileName, true))->load();
     }
 }, '{$yaml-file}');
