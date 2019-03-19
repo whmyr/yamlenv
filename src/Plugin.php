@@ -28,16 +28,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     protected $config;
 
     /**
-     * @return array
-     */
-    public static function getSubscribedEvents() : array
-    {
-        return [
-            ScriptEvents::PRE_AUTOLOAD_DUMP => ['onPreAutoloadDump']
-        ];
-    }
-
-    /**
      * @param Composer $composer
      * @param IOInterface $io
      */
@@ -46,6 +36,18 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->config = Config::load($io, $composer->getConfig());
         $this->composer = $composer;
         $this->io = $io;
+
+        $this->io->write('<info>YAML plugin activated!</info>');
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            ScriptEvents::PRE_AUTOLOAD_DUMP => ['onPreAutoloadDump'],
+        ];
     }
 
     /**
@@ -72,6 +74,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             $this->io->writeError('<error>Could not dump whmyr/yamlenv autoload include file</error>');
         }
     }
+
+    /**
+     * @return ClassLoader
+     */
     private function createLoader(): ClassLoader
     {
         $package = $this->composer->getPackage();
@@ -79,6 +85,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $packages = $this->composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
         $packageMap = $generator->buildPackageMap($this->composer->getInstallationManager(), $package, $packages);
         $map = $generator->parseAutoloads($packageMap, $package);
+
         return $generator->createLoader($map);
     }
 }
