@@ -1,6 +1,6 @@
 {
-    "name": "maatwebsite/yamlenv",
-    "description": "Reads `env.yml` and makes a validated list of variables available as environment variables",
+    "name": "whymr/yamlenv",
+    "description": "Reads `env.yml`. Fork of maatwebsite/yamlenv",
     "keywords": ["env", "yaml", "environment"],
     "license" : "LGPL",
     "authors" : [
@@ -8,6 +8,10 @@
             "name": "Maatwebsite",
             "email": "jochem@maatwebsite.nl",
             "homepage": "http://www.maatwebsite.nl"
+        },
+        {
+            "name": "Willi Wehmeier",
+            "email": "hi@whmyr.de"
         }
     ],
     "require": {
