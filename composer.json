@@ -3,6 +3,7 @@
     "description": "Reads `env.yml`. Fork of maatwebsite/yamlenv",
     "keywords": ["env", "yaml", "environment"],
     "license" : "LGPL",
+    "version": "1.0.0",
     "authors" : [
         {
             "name": "Maatwebsite",
